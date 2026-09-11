@@ -9,7 +9,7 @@ import {
 } from "react";
 import { products, type Product } from "./shop-data";
 
-export type CartLine = { id: string; qty: number; size?: string };
+export type CartLine = { id: string; qty: number; size?: string | undefined };
 
 type ShopState = {
   cart: CartLine[];
@@ -26,7 +26,7 @@ type ShopState = {
   setMenuOpen: (v: boolean) => void;
   count: number;
   subtotal: number;
-  lines: { product: Product; qty: number; size?: string }[];
+  lines: { product: Product; qty: number; size?: string | undefined }[];
 };
 
 const ShopContext = createContext<ShopState | null>(null);
@@ -100,7 +100,7 @@ export function ShopProvider({ children }: { children: ReactNode }) {
           const product = products.find((p) => p.id === l.id);
           return product ? { product, qty: l.qty, size: l.size } : null;
         })
-        .filter(Boolean) as { product: Product; qty: number; size?: string }[],
+        .filter(Boolean) as { product: Product; qty: number; size?: string | undefined }[],
     [cart],
   );
 
