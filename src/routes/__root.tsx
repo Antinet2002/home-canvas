@@ -11,6 +11,12 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { ShopProvider } from "../lib/store";
+import { Header } from "../components/site/Header";
+import { Footer } from "../components/site/Footer";
+import { CartDrawer } from "../components/site/CartDrawer";
+import { SearchOverlay } from "../components/site/SearchOverlay";
+import { Cursor } from "../components/site/Cursor";
 
 function NotFoundComponent() {
   return (
@@ -77,14 +83,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Maison Tara — Slow-Crafted Home Decor & Textiles" },
+      {
+        name: "description",
+        content:
+          "Maison Tara brings quiet luxury, stonewashed French linen, and handwoven textiles to deliberate spaces.",
+      },
+      { name: "author", content: "Maison Tara" },
+      { property: "og:title", content: "Maison Tara — Slow-Crafted Home Decor & Textiles" },
+      {
+        property: "og:description",
+        content:
+          "Maison Tara brings quiet luxury, stonewashed French linen, and handwoven textiles to deliberate spaces.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:site", content: "@MaisonTara" },
     ],
     links: [
       {
@@ -119,8 +133,19 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <ShopProvider>
+        <div className="relative flex min-h-screen flex-col bg-background text-foreground selection:bg-clay selection:text-ivory">
+          <Header />
+          <main id="main-content" className="flex-1">
+            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+            <Outlet />
+          </main>
+          <Footer />
+          <CartDrawer />
+          <SearchOverlay />
+          <Cursor />
+        </div>
+      </ShopProvider>
     </QueryClientProvider>
   );
 }

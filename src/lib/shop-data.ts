@@ -22,7 +22,10 @@ import pLamp from "@/assets/p-lamp.jpg";
 import pThrow from "@/assets/p-throw.jpg";
 import pDecor from "@/assets/p-decor.jpg";
 
+import hero from "@/assets/hero.jpg";
+
 export const images = {
+  hero,
   bedLinen,
   curtains,
   cushions,
@@ -39,6 +42,8 @@ export const images = {
   journal2,
   journal3,
 };
+
+export const heroImage = hero;
 
 export type Product = {
   id: string;
