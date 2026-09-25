@@ -1,91 +1,51 @@
 import { Link } from "@tanstack/react-router";
 
-const columns = [
-  {
-    title: "Shop",
-    links: [
-      { label: "Bed Linen", to: "/shop" as const },
-      { label: "Curtains", to: "/shop" as const },
-      { label: "Cushions", to: "/shop" as const },
-      { label: "Rugs", to: "/shop" as const },
-      { label: "Bath", to: "/shop" as const },
-      { label: "Decor", to: "/shop" as const },
-    ],
-  },
-  {
-    title: "About",
-    links: [
-      { label: "Our Story", to: "/about" as const },
-      { label: "Sustainability", to: "/about" as const },
-      { label: "Journal", to: "/journal" as const },
-      { label: "Contact", to: "/contact" as const },
-    ],
-  },
-  {
-    title: "Help",
-    links: [
-      { label: "Shipping", to: "/contact" as const },
-      { label: "Returns", to: "/contact" as const },
-      { label: "FAQs", to: "/contact" as const },
-      { label: "Track Order", to: "/contact" as const },
-    ],
-  },
+const cols = [
+  { title: "Explore", links: [
+    { label: "Projects", to: "/projects" as const },
+    { label: "Services", to: "/services" as const },
+    { label: "Cost estimate", to: "/estimate" as const },
+  ] },
+  { title: "Studio", links: [
+    { label: "About EUS", to: "/about" as const },
+    { label: "Journal", to: "/journal" as const },
+    { label: "Consultation", to: "/consultation" as const },
+  ] },
 ];
 
 export function Footer() {
   return (
-    <footer className="border-border mt-24 border-t">
-      <div className="container-editorial grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-4">
-        {columns.map((col) => (
-          <nav key={col.title} aria-label={col.title}>
-            <h2 className="text-eyebrow text-muted-foreground">{col.title}</h2>
-            <ul className="mt-5 space-y-3">
-              {col.links.map((l) => (
+    <footer className="bg-ink text-ivory">
+      <div className="container-editorial grid gap-14 py-20 md:grid-cols-[1.6fr_1fr_1fr_1.2fr]">
+        <div>
+          <p className="font-display text-4xl tracking-[0.18em]">EUS</p>
+          <p className="font-display mt-6 max-w-xs text-2xl italic opacity-80">
+            Homes that feel unmistakably yours.
+          </p>
+        </div>
+        {cols.map((c) => (
+          <div key={c.title}>
+            <p className="text-eyebrow opacity-60">{c.title}</p>
+            <ul className="mt-5 space-y-3 text-sm">
+              {c.links.map((l) => (
                 <li key={l.label}>
-                  <Link to={l.to} className="link-underline text-sm">
-                    {l.label}
-                  </Link>
+                  <Link to={l.to} className="link-underline">{l.label}</Link>
                 </li>
               ))}
             </ul>
-          </nav>
+          </div>
         ))}
         <div>
-          <h2 className="text-eyebrow text-muted-foreground">Follow</h2>
-          <ul className="mt-5 space-y-3">
-            {["Instagram", "Facebook", "Pinterest"].map((s) => (
-              <li key={s}>
-                <a href="#" className="link-underline text-sm">
-                  {s}
-                </a>
-              </li>
-            ))}
-          </ul>
+          <p className="text-eyebrow opacity-60">Experience centres</p>
+          <p className="mt-5 text-sm leading-relaxed opacity-80">
+            Bengaluru · Mumbai · Pune · Hyderabad · Gurugram
+          </p>
+          <p className="mt-4 text-sm opacity-80">hello@eusinterior.com</p>
         </div>
       </div>
-
-      <div className="container-editorial pb-6">
-        <p
-          aria-hidden="true"
-          className="font-display text-foreground/90 w-full text-[clamp(3.5rem,17vw,14rem)] leading-[0.85] tracking-[-0.03em]"
-        >
-          Maison Tara
-        </p>
-      </div>
-
-      <div className="border-border container-editorial text-muted-foreground flex flex-col gap-3 border-t py-6 text-xs sm:flex-row sm:items-center sm:justify-between">
-        <p>© {new Date().getFullYear()} Maison Tara. Made in India.</p>
-        <div className="flex flex-wrap gap-6">
-          <a href="#" className="link-underline">
-            Privacy
-          </a>
-          <a href="#" className="link-underline">
-            Terms
-          </a>
-          <a href="#" className="link-underline">
-            Shipping policy
-          </a>
-        </div>
+      <div className="container-editorial border-ivory/15 flex flex-col justify-between gap-2 border-t py-6 text-xs opacity-60 md:flex-row">
+        <span>© {new Date().getFullYear()} EUS Interior. All rights reserved.</span>
+        <span>45-day delivery · 10-year warranty · Fixed quotes</span>
       </div>
     </footer>
   );
