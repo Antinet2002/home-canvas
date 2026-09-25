@@ -11,12 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
-import { Route as ContactRouteImport } from './routes/contact'
-import { Route as ShopRouteImport } from './routes/shop'
-import { Route as WishlistRouteImport } from './routes/wishlist'
-import { Route as JournalIndexRouteImport } from './routes/journal/index'
-import { Route as JournalSlugRouteImport } from './routes/journal/$slug'
-import { Route as ProductSlugRouteImport } from './routes/product.$slug'
+import { Route as ConsultationRouteImport } from './routes/consultation'
+import { Route as EstimateRouteImport } from './routes/estimate'
+import { Route as JournalRouteImport } from './routes/journal'
+import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as ServicesRouteImport } from './routes/services'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,110 +27,98 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
+const ConsultationRoute = ConsultationRouteImport.update({
+  id: '/consultation',
+  path: '/consultation',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ShopRoute = ShopRouteImport.update({
-  id: '/shop',
-  path: '/shop',
+const EstimateRoute = EstimateRouteImport.update({
+  id: '/estimate',
+  path: '/estimate',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WishlistRoute = WishlistRouteImport.update({
-  id: '/wishlist',
-  path: '/wishlist',
+const JournalRoute = JournalRouteImport.update({
+  id: '/journal',
+  path: '/journal',
   getParentRoute: () => rootRouteImport,
 } as any)
-const JournalIndexRoute = JournalIndexRouteImport.update({
-  id: '/journal/',
-  path: '/journal/',
+const ProjectsRoute = ProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
   getParentRoute: () => rootRouteImport,
 } as any)
-const JournalSlugRoute = JournalSlugRouteImport.update({
-  id: '/journal/$slug',
-  path: '/journal/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProductSlugRoute = ProductSlugRouteImport.update({
-  id: '/product/$slug',
-  path: '/product/$slug',
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/contact': typeof ContactRoute
-  '/shop': typeof ShopRoute
-  '/wishlist': typeof WishlistRoute
-  '/journal/$slug': typeof JournalSlugRoute
-  '/product/$slug': typeof ProductSlugRoute
-  '/journal/': typeof JournalIndexRoute
+  '/consultation': typeof ConsultationRoute
+  '/estimate': typeof EstimateRoute
+  '/journal': typeof JournalRoute
+  '/projects': typeof ProjectsRoute
+  '/services': typeof ServicesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/contact': typeof ContactRoute
-  '/shop': typeof ShopRoute
-  '/wishlist': typeof WishlistRoute
-  '/journal/$slug': typeof JournalSlugRoute
-  '/product/$slug': typeof ProductSlugRoute
-  '/journal': typeof JournalIndexRoute
+  '/consultation': typeof ConsultationRoute
+  '/estimate': typeof EstimateRoute
+  '/journal': typeof JournalRoute
+  '/projects': typeof ProjectsRoute
+  '/services': typeof ServicesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/contact': typeof ContactRoute
-  '/shop': typeof ShopRoute
-  '/wishlist': typeof WishlistRoute
-  '/journal/$slug': typeof JournalSlugRoute
-  '/product/$slug': typeof ProductSlugRoute
-  '/journal/': typeof JournalIndexRoute
+  '/consultation': typeof ConsultationRoute
+  '/estimate': typeof EstimateRoute
+  '/journal': typeof JournalRoute
+  '/projects': typeof ProjectsRoute
+  '/services': typeof ServicesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
-    | '/contact'
-    | '/shop'
-    | '/wishlist'
-    | '/journal/$slug'
-    | '/product/$slug'
-    | '/journal/'
+    | '/consultation'
+    | '/estimate'
+    | '/journal'
+    | '/projects'
+    | '/services'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/contact'
-    | '/shop'
-    | '/wishlist'
-    | '/journal/$slug'
-    | '/product/$slug'
+    | '/consultation'
+    | '/estimate'
     | '/journal'
+    | '/projects'
+    | '/services'
   id:
     | '__root__'
     | '/'
     | '/about'
-    | '/contact'
-    | '/shop'
-    | '/wishlist'
-    | '/journal/$slug'
-    | '/product/$slug'
-    | '/journal/'
+    | '/consultation'
+    | '/estimate'
+    | '/journal'
+    | '/projects'
+    | '/services'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  ContactRoute: typeof ContactRoute
-  ShopRoute: typeof ShopRoute
-  WishlistRoute: typeof WishlistRoute
-  JournalSlugRoute: typeof JournalSlugRoute
-  ProductSlugRoute: typeof ProductSlugRoute
-  JournalIndexRoute: typeof JournalIndexRoute
+  ConsultationRoute: typeof ConsultationRoute
+  EstimateRoute: typeof EstimateRoute
+  JournalRoute: typeof JournalRoute
+  ProjectsRoute: typeof ProjectsRoute
+  ServicesRoute: typeof ServicesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -150,46 +137,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
+    '/consultation': {
+      id: '/consultation'
+      path: '/consultation'
+      fullPath: '/consultation'
+      preLoaderRoute: typeof ConsultationRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/shop': {
-      id: '/shop'
-      path: '/shop'
-      fullPath: '/shop'
-      preLoaderRoute: typeof ShopRouteImport
+    '/estimate': {
+      id: '/estimate'
+      path: '/estimate'
+      fullPath: '/estimate'
+      preLoaderRoute: typeof EstimateRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/wishlist': {
-      id: '/wishlist'
-      path: '/wishlist'
-      fullPath: '/wishlist'
-      preLoaderRoute: typeof WishlistRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/journal/': {
-      id: '/journal/'
+    '/journal': {
+      id: '/journal'
       path: '/journal'
-      fullPath: '/journal/'
-      preLoaderRoute: typeof JournalIndexRouteImport
+      fullPath: '/journal'
+      preLoaderRoute: typeof JournalRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/journal/$slug': {
-      id: '/journal/$slug'
-      path: '/journal/$slug'
-      fullPath: '/journal/$slug'
-      preLoaderRoute: typeof JournalSlugRouteImport
+    '/projects': {
+      id: '/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProjectsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/product/$slug': {
-      id: '/product/$slug'
-      path: '/product/$slug'
-      fullPath: '/product/$slug'
-      preLoaderRoute: typeof ProductSlugRouteImport
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -198,12 +178,11 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  ContactRoute: ContactRoute,
-  ShopRoute: ShopRoute,
-  WishlistRoute: WishlistRoute,
-  JournalSlugRoute: JournalSlugRoute,
-  ProductSlugRoute: ProductSlugRoute,
-  JournalIndexRoute: JournalIndexRoute,
+  ConsultationRoute: ConsultationRoute,
+  EstimateRoute: EstimateRoute,
+  JournalRoute: JournalRoute,
+  ProjectsRoute: ProjectsRoute,
+  ServicesRoute: ServicesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

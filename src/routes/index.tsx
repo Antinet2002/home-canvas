@@ -1,594 +1,281 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Check, Heart, Sparkles } from "lucide-react";
-import { useState } from "react";
-import {
-  categories,
-  formatINR,
-  heroImage,
-  hotspots,
-  journal,
-  patterns,
-  products,
-  shopTheLookImage,
-  socialTiles,
-  storyImage,
-  sustainabilityImage,
-  testimonials,
-} from "@/lib/shop-data";
-import { useShop } from "@/lib/store";
-import { ProductCard } from "@/components/site/ProductCard";
+import { AnimatePresence, motion, useScroll, useTransform } from "motion/react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { FadeUp, ImageReveal, SectionHeading } from "@/components/site/Reveal";
+import { Estimator } from "@/components/site/Estimator";
+import { BeforeAfter } from "@/components/site/BeforeAfter";
+import { ProjectCard } from "@/components/site/ProjectCard";
+import { heroSlides, rooms, styles, projects, services, process, testimonials, designers, journal, img } from "@/lib/eus-data";
 
 export const Route = createFileRoute("/")({
-  component: IndexPage,
+  head: () => ({
+    meta: [
+      { title: "EUS Interior — Design a home that feels unmistakably yours" },
+      { name: "description", content: "Premium interior design for apartments, villas, kitchens and bedrooms across India. Fixed quotes, 45-day delivery, free consultation." },
+      { property: "og:title", content: "EUS Interior — Premium home interiors" },
+      { property: "og:description", content: "Design a home that feels unmistakably yours. Explore projects, estimate costs and book a free consultation." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+  component: Home,
 });
 
-function IndexPage() {
-  const { addToCart, setCartOpen } = useShop();
-  const [activeHotspot, setActiveHotspot] = useState<string | null>("p2");
-  const [newsletterEmail, setNewsletterEmail] = useState("");
-  const [newsletterSent, setNewsletterSent] = useState(false);
+const EASE = [0.22, 1, 0.36, 1] as const;
 
-  const activeProduct = activeHotspot ? products.find((p) => p.id === activeHotspot) : null;
-
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newsletterEmail.trim()) {
-      setNewsletterSent(true);
-      setNewsletterEmail("");
-    }
-  };
-
+function Hero() {
+  const [i, setI] = useState(0);
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
+  useEffect(() => {
+    const t = setInterval(() => setI((v) => (v + 1) % heroSlides.length), 6500);
+    return () => clearInterval(t);
+  }, []);
+  const s = heroSlides[i]!;
   return (
-    <div className="flex flex-col">
-      {/* 1. HERO SECTION */}
-      <section className="relative min-h-[92vh] flex items-end justify-start overflow-hidden bg-ink text-ivory">
-        <img
-          src={heroImage}
-          alt="Maison Tara serene living room interior with natural linen and morning light"
-          className="absolute inset-0 h-full w-full object-cover object-center opacity-85 scale-[1.03] transition-transform duration-[2000ms] ease-out hover:scale-100"
-          loading="eager"
-        />
-        {/* Editorial gradient scrim */}
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/35 to-transparent" />
-        <div className="absolute inset-0 bg-radial from-transparent via-transparent to-ink/40 pointer-events-none" />
-
-        <div className="container-editorial relative z-10 pb-16 pt-32 md:pb-24 max-w-4xl">
-          <FadeUp delay={0.1}>
-            <p className="text-eyebrow tracking-[0.28em] text-sand/90 flex items-center gap-2">
-              <span className="inline-block size-1.5 rounded-full bg-clay" />
-              Edition 2026 • The Living Room Series
-            </p>
-          </FadeUp>
-
-          <FadeUp delay={0.2}>
-            <h1 className="text-hero font-display text-ivory mt-4 text-balance">
-              Quiet luxury for deliberate spaces.
-            </h1>
-          </FadeUp>
-
-          <FadeUp delay={0.3}>
-            <p className="mt-6 text-sand/80 text-base md:text-lg max-w-xl leading-relaxed font-light">
-              Long-staple stonewashed linen, handloom cotton, and wheel-thrown stoneware —
-              slow-crafted with generational weaver clusters across India.
-            </p>
-          </FadeUp>
-
-          <FadeUp delay={0.4}>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Link
-                to="/shop"
-                className="bg-ivory text-ink hover:bg-sand px-8 py-4 text-eyebrow transition-colors tracking-[0.16em]"
-              >
-                Explore Collection
-              </Link>
-              <Link
-                to="/about"
-                className="border border-ivory/40 hover:border-ivory text-ivory px-8 py-4 text-eyebrow transition-colors tracking-[0.16em] backdrop-blur-sm"
-              >
-                Our Heritage
-              </Link>
+    <section ref={ref} className="bg-ink text-ivory relative h-[100svh] min-h-[600px] overflow-hidden">
+      <motion.div style={{ y }} className="absolute inset-0">
+        <AnimatePresence mode="sync">
+          <motion.img
+            key={s.image}
+            src={s.image}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover"
+            initial={{ opacity: 0, scale: 1.08 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.6, ease: EASE }}
+          />
+        </AnimatePresence>
+      </motion.div>
+      <div className="from-ink/80 via-ink/25 to-ink/30 absolute inset-0 bg-gradient-to-t" />
+      <div className="container-editorial relative flex h-full flex-col justify-end pb-14 md:pb-20">
+        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="text-eyebrow opacity-80">
+          Interior design studio · Est. 2014
+        </motion.p>
+        <h1 className="mt-5 max-w-5xl text-[clamp(3rem,7vw,6.9rem)] leading-[0.95] font-light tracking-[-0.035em] uppercase">
+          Design your
+          <br />
+          <AnimatePresence mode="wait">
+            <motion.span
+              key={s.line}
+              className="font-display inline-block normal-case italic"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.7, ease: EASE }}
+            >
+              {s.line}
+            </motion.span>
+          </AnimatePresence>
+        </h1>
+        <div className="mt-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+          <div className="flex flex-wrap gap-3">
+            <Link to="/consultation" className="bg-ivory text-ink hover:bg-accent hover:text-ivory inline-flex h-14 items-center gap-3 px-7 text-sm tracking-[0.1em] uppercase transition-colors">
+              Book free consultation <ArrowRight className="size-4" />
+            </Link>
+            <Link to="/projects" className="border-ivory/50 hover:bg-ivory hover:text-ink inline-flex h-14 items-center px-7 text-sm tracking-[0.1em] uppercase transition-colors border">
+              See our work
+            </Link>
+          </div>
+          <div className="flex items-center gap-5">
+            <span className="text-sm opacity-80">{s.kicker}</span>
+            <div className="flex gap-2">
+              {heroSlides.map((sl, n) => (
+                <button key={sl.image} type="button" aria-label={`Show slide ${n + 1}`} onClick={() => setI(n)} className="bg-ivory/30 relative h-[2px] w-10 overflow-hidden">
+                  {n === i ? (
+                    <motion.span key={i} className="bg-ivory absolute inset-y-0 left-0" initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ duration: 6.5, ease: "linear" }} />
+                  ) : null}
+                </button>
+              ))}
             </div>
-          </FadeUp>
-        </div>
-      </section>
-
-      {/* 2. PHILOSOPHY MARQUEE TICKER */}
-      <div className="border-y border-border/80 bg-secondary/60 py-4 overflow-hidden">
-        <div className="marquee-track flex gap-12 whitespace-nowrap text-eyebrow tracking-[0.24em] text-muted-foreground">
-          <span>100% Stonewashed French Linen</span>
-          <span>•</span>
-          <span>Long-Staple Combed Handloom Cotton</span>
-          <span>•</span>
-          <span>Pure Botanical & Azo-Free Dyes</span>
-          <span>•</span>
-          <span>Zero Single-Use Plastics</span>
-          <span>•</span>
-          <span>Generational Artisan Clusters in Bhuj & Jaipur</span>
-          <span>•</span>
-          <span>Carbon-Neutral Doorstep Delivery</span>
-          <span>•</span>
-          <span>100% Stonewashed French Linen</span>
-          <span>•</span>
-          <span>Long-Staple Combed Handloom Cotton</span>
-          <span>•</span>
-          <span>Pure Botanical & Azo-Free Dyes</span>
-          <span>•</span>
-          <span>Zero Single-Use Plastics</span>
-          <span>•</span>
-          <span>Generational Artisan Clusters in Bhuj & Jaipur</span>
-          <span>•</span>
-          <span>Carbon-Neutral Doorstep Delivery</span>
+          </div>
         </div>
       </div>
+    </section>
+  );
+}
 
-      {/* 3. CURATED DEPARTMENTS / CATEGORIES */}
-      <section className="container-editorial py-24 md:py-32">
-        <SectionHeading
-          eyebrow="Departments"
-          title="Curated for every corner"
-          subtitle="Intentional fabrics and grounding textures designed to live harmoniously together."
-          action={
-            <Link to="/shop" className="link-underline text-eyebrow inline-flex items-center gap-2">
-              Browse full catalog <ArrowRight className="size-3.5" />
-            </Link>
-          }
-        />
+function Home() {
+  const [style, setStyle] = useState(0);
+  return (
+    <>
+      <Hero />
 
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {categories.map((cat, idx) => (
-            <FadeUp key={cat.name} delay={idx * 0.08} className="group relative">
-              <Link
-                to="/shop"
-                search={{ category: cat.name }}
-                className="block overflow-hidden bg-secondary relative aspect-[4/5]"
-                data-cursor="view"
-              >
-                <img
-                  src={cat.image}
-                  alt={cat.name}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-transparent transition-opacity group-hover:opacity-90" />
-                <div className="absolute inset-x-0 bottom-0 p-6 text-ivory">
-                  <p className="text-eyebrow text-sand/80">Department</p>
-                  <h3 className="font-display text-2xl md:text-3xl mt-1">{cat.name}</h3>
-                  <p className="mt-2 text-xs text-sand/75 line-clamp-2">{cat.description}</p>
-                  <span className="inline-flex items-center gap-1.5 text-eyebrow text-ivory mt-4 underline underline-offset-4 decoration-ivory/50 group-hover:decoration-ivory">
-                    Discover <ArrowRight className="size-3 transition-transform group-hover:translate-x-1" />
-                  </span>
-                </div>
-              </Link>
+      {/* Trust strip */}
+      <section className="border-border border-b">
+        <div className="container-editorial grid grid-cols-2 gap-y-6 py-10 md:grid-cols-4">
+          {[["1,200+", "Homes delivered"], ["45 days", "Guaranteed delivery"], ["10 yrs", "Joinery warranty"], ["4.9 / 5", "Client rating"]].map(([a, b]) => (
+            <FadeUp key={b}>
+              <p className="font-display text-4xl">{a}</p>
+              <p className="text-muted-foreground mt-1 text-sm">{b}</p>
             </FadeUp>
           ))}
         </div>
       </section>
 
-      {/* 4. SEASONAL EDIT (FEATURED PRODUCTS) */}
-      <section className="bg-sand/35 border-y border-border/70 py-24 md:py-32">
-        <div className="container-editorial">
-          <SectionHeading
-            eyebrow="The Seasonal Edit"
-            title="Woven to soften with age"
-            subtitle="Pieces woven in small batches, finished with soft stonewashing, built for daily living."
-            action={
-              <Link to="/shop" className="link-underline text-eyebrow inline-flex items-center gap-2">
-                View all {products.length} pieces <ArrowRight className="size-3.5" />
-              </Link>
-            }
-          />
-
-          <div className="mt-14 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-            {products.slice(0, 4).map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 5. INTERACTIVE SHOP-THE-LOOK ROOM SCENE */}
-      <section className="container-editorial py-24 md:py-32">
-        <SectionHeading
-          eyebrow="Shop The Look • Scene No. 04"
-          title="Afternoon in the courtyard"
-          subtitle="Explore the composition. Click any glowing pin to reveal the linen, textures, and ceramics composing the room."
-        />
-
-        <div className="mt-12 grid lg:grid-cols-12 gap-8 items-center">
-          {/* Interactive room photograph */}
-          <div className="lg:col-span-8 relative aspect-[16/10] sm:aspect-[16/11] bg-secondary overflow-hidden rounded-xs shadow-sm">
-            <img
-              src={shopTheLookImage}
-              alt="Maison Tara curated living space featuring handwoven curtains, cushions, jute rug and ceramic lamp"
-              className="h-full w-full object-cover"
-              loading="lazy"
-            />
-
-            {/* Hotspots */}
-            {hotspots.map((hs) => {
-              const p = products.find((item) => item.id === hs.id);
-              if (!p) return null;
-              const isActive = activeHotspot === hs.id;
-
-              return (
-                <div
-                  key={hs.id}
-                  style={{ top: `${hs.y}%`, left: `${hs.x}%` }}
-                  className="absolute -translate-x-1/2 -translate-y-1/2 z-20"
-                >
-                  <button
-                    type="button"
-                    onClick={() => setActiveHotspot(isActive ? null : hs.id)}
-                    aria-label={`Inspect ${p.name}`}
-                    className={`relative grid size-8 place-items-center rounded-full border transition-all ${
-                      isActive
-                        ? "bg-clay border-ivory text-ivory scale-125"
-                        : "bg-ivory/90 hover:bg-ivory border-ink/30 text-ink scale-100 hotspot-pulse"
-                    }`}
-                  >
-                    <span className="size-2 rounded-full bg-current" />
+      {/* Find your style */}
+      <section className="container-editorial py-24 md:py-36">
+        <div className="grid gap-12 md:grid-cols-[1fr_1.3fr] md:items-center">
+          <div>
+            <SectionHeading eyebrow="Find your style" title={<>Every home begins with <em className="text-accent">a feeling.</em></>} />
+            <ul className="mt-10">
+              {styles.map((s, n) => (
+                <li key={s.name}>
+                  <button type="button" onClick={() => setStyle(n)} className={`border-border flex w-full items-baseline justify-between border-b py-5 text-left transition-opacity ${style === n ? "" : "opacity-45 hover:opacity-80"}`}>
+                    <span className="font-display text-3xl">{s.name}</span>
+                    <span className="text-muted-foreground hidden text-sm sm:block">{s.note}</span>
                   </button>
-                </div>
-              );
-            })}
+                </li>
+              ))}
+            </ul>
           </div>
-
-          {/* Active Hotspot Detail Card */}
-          <div className="lg:col-span-4 flex flex-col justify-center">
-            {activeProduct ? (
-              <div className="border border-border bg-card p-7 shadow-sm transition-all duration-300">
-                <p className="text-eyebrow text-accent flex items-center gap-1.5">
-                  <Sparkles className="size-3" /> Selected from room
-                </p>
-                <div className="mt-4 flex gap-4 items-start">
-                  <img
-                    src={activeProduct.images[0]}
-                    alt={activeProduct.name}
-                    className="size-24 object-cover bg-secondary rounded-xs shrink-0"
-                  />
-                  <div>
-                    <span className="text-xs text-muted-foreground">{activeProduct.category}</span>
-                    <h3 className="font-display text-xl leading-snug mt-0.5">
-                      <Link
-                        to="/product/$slug"
-                        params={{ slug: activeProduct.slug }}
-                        className="link-underline"
-                      >
-                        {activeProduct.name}
-                      </Link>
-                    </h3>
-                    <p className="mt-1 text-sm font-medium">{formatINR(activeProduct.price)}</p>
-                  </div>
-                </div>
-
-                <p className="mt-4 text-xs text-muted-foreground line-clamp-3 leading-relaxed">
-                  {activeProduct.description}
-                </p>
-
-                <div className="mt-6 flex items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      addToCart(activeProduct.id, activeProduct.sizes[0]);
-                      setCartOpen(true);
-                    }}
-                    className="flex-1 bg-ink text-ivory hover:bg-ink/90 py-3 text-eyebrow transition-colors"
-                  >
-                    Add to Bag
-                  </button>
-                  <Link
-                    to="/product/$slug"
-                    params={{ slug: activeProduct.slug }}
-                    className="border border-border hover:bg-secondary px-4 py-3 text-eyebrow transition-colors"
-                  >
-                    View Details
-                  </Link>
-                </div>
-              </div>
-            ) : (
-              <div className="border border-dashed border-border p-8 text-center text-muted-foreground">
-                <p className="font-display text-xl text-foreground">Select any marker</p>
-                <p className="mt-2 text-xs">
-                  Tap any pin on the interior photograph to inspect details, fabric specifications, and pricing.
-                </p>
-              </div>
-            )}
-
-            {/* Quick picker row */}
-            <div className="mt-6">
-              <p className="text-eyebrow text-muted-foreground mb-3">All items in this setting</p>
-              <div className="flex gap-2 overflow-x-auto pb-2 hide-scrollbar">
-                {hotspots.map((hs) => {
-                  const p = products.find((item) => item.id === hs.id);
-                  if (!p) return null;
-                  const isSel = activeHotspot === hs.id;
-                  return (
-                    <button
-                      key={p.id}
-                      type="button"
-                      onClick={() => setActiveHotspot(p.id)}
-                      className={`flex items-center gap-2 border px-3 py-2 text-xs shrink-0 transition-colors ${
-                        isSel ? "border-clay bg-card font-medium" : "border-border hover:bg-secondary"
-                      }`}
-                    >
-                      <img src={p.images[0]} alt="" className="size-6 object-cover rounded-xs" />
-                      <span>{p.name.split(" ")[0]}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+          <div className="relative aspect-[4/5] overflow-hidden">
+            <AnimatePresence mode="sync">
+              <motion.img key={style} src={[img.living, img.look, img.bedroom, img.kitchen][style]} alt={styles[style]!.name} className="absolute inset-0 h-full w-full object-cover" initial={{ opacity: 0, scale: 1.05 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.9, ease: EASE }} />
+            </AnimatePresence>
           </div>
         </div>
       </section>
 
-      {/* 6. CRAFT & MATERIAL EDITORIAL STORY */}
-      <section className="border-t border-border bg-card/40 py-24 md:py-32">
+      {/* Rooms */}
+      <section className="bg-secondary py-24 md:py-32">
         <div className="container-editorial">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <ImageReveal
-              src={storyImage}
-              alt="Generational weaver working on traditional wooden handloom in Gujarat"
-              className="aspect-[4/5] bg-secondary"
-            />
-
-            <div className="flex flex-col justify-center">
-              <FadeUp>
-                <p className="text-eyebrow text-accent">Craft Heritage</p>
-              </FadeUp>
-              <FadeUp delay={0.08}>
-                <h2 className="text-section font-display mt-3">
-                  Made by human hands, softened by time.
-                </h2>
-              </FadeUp>
-              <FadeUp delay={0.16}>
-                <p className="mt-6 text-muted-foreground leading-relaxed text-base">
-                  Every Maison Tara textile begins on traditional pit and shuttle looms in master
-                  weaving clusters across Bhuj, Odisha, and Jaipur. We do not rush the process.
-                  Long-staple fibers are hand-sorted, spun with deliberate tension, and pre-washed twice
-                  with river stones so the texture you touch today only deepens after ten years of laundering.
-                </p>
-              </FadeUp>
-              <FadeUp delay={0.24}>
-                <div className="mt-8 grid grid-cols-2 gap-6 border-t border-border pt-6">
-                  <div>
-                    <h4 className="font-display text-2xl">100%</h4>
-                    <p className="text-xs text-muted-foreground mt-1">Natural, biodegradable fibers</p>
-                  </div>
-                  <div>
-                    <h4 className="font-display text-2xl">40+ Years</h4>
-                    <p className="text-xs text-muted-foreground mt-1">Generational master artisan partnerships</p>
-                  </div>
-                </div>
-              </FadeUp>
-              <FadeUp delay={0.32}>
-                <div className="mt-8">
-                  <Link to="/about" className="link-underline text-eyebrow inline-flex items-center gap-2">
-                    Read our full story & sourcing manifesto <ArrowRight className="size-3.5" />
-                  </Link>
-                </div>
-              </FadeUp>
-            </div>
-          </div>
-
-          {/* Sustainability Sub-feature */}
-          <div className="mt-24 grid lg:grid-cols-2 gap-16 items-center">
-            <div className="order-2 lg:order-1 flex flex-col justify-center">
-              <FadeUp>
-                <p className="text-eyebrow text-accent">Mindful Materials</p>
-              </FadeUp>
-              <FadeUp delay={0.08}>
-                <h2 className="text-section font-display mt-3">
-                  Nothing synthetic. Nothing disposable.
-                </h2>
-              </FadeUp>
-              <FadeUp delay={0.16}>
-                <p className="mt-6 text-muted-foreground leading-relaxed text-base">
-                  We use plant-derived dyes, low-impact minerals, and zero single-use plastic wrapping.
-                  Your orders arrive encased in reusable cotton duster bags made from our workshop cutting remnants.
-                </p>
-              </FadeUp>
-              <FadeUp delay={0.24}>
-                <ul className="mt-6 space-y-3 text-sm">
-                  <li className="flex items-center gap-3">
-                    <span className="size-1.5 rounded-full bg-clay" /> GOTS-certified organic cotton yarns
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <span className="size-1.5 rounded-full bg-clay" /> Stonewashed Normandy flax linen
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <span className="size-1.5 rounded-full bg-clay" /> Completely compostable craft mailers
-                  </li>
-                </ul>
-              </FadeUp>
-            </div>
-            <ImageReveal
-              src={sustainabilityImage}
-              alt="Raw natural linen and cotton fibers drying in shade"
-              className="order-1 lg:order-2 aspect-[4/5] bg-secondary"
-            />
-          </div>
+          <SectionHeading eyebrow="Explore by room" title={<>Rooms, <em>considered.</em></>} action={<Link to="/projects" className="link-underline text-sm">View all projects</Link>} />
         </div>
-      </section>
-
-      {/* 7. TEXTILE PATTERNS & WEAVES */}
-      <section className="container-editorial py-24">
-        <SectionHeading
-          eyebrow="The Weaves"
-          title="Patterns rooted in botanical geometry"
-          subtitle="Subtle motifs drawn from regional flora, architectural jaalis, and quiet repeating rhythm."
-        />
-
-        <div className="mt-12 grid gap-6 grid-cols-2 md:grid-cols-4">
-          {patterns.map((p, idx) => (
-            <FadeUp key={p.name} delay={idx * 0.08} className="group flex flex-col">
-              <div className="bg-secondary aspect-square overflow-hidden">
-                <img
-                  src={p.image}
-                  alt={`${p.name} pattern close-up`}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-108"
-                />
+        <div className="hide-scrollbar container-editorial mt-12 flex snap-x gap-5 overflow-x-auto pb-4">
+          {rooms.map((r) => (
+            <Link key={r.name} to="/projects" className="group relative aspect-[3/4] w-[72vw] shrink-0 snap-start overflow-hidden sm:w-[40vw] lg:w-[24vw]">
+              <img src={r.image} alt={r.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-105" />
+              <div className="from-ink/70 absolute inset-0 bg-gradient-to-t to-transparent" />
+              <div className="text-ivory absolute inset-x-5 bottom-5 flex items-end justify-between">
+                <div>
+                  <p className="font-display text-3xl">{r.name}</p>
+                  <p className="text-sm opacity-75">{r.count} projects</p>
+                </div>
+                <ArrowUpRight className="size-5 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
               </div>
-              <div className="mt-3 flex items-center justify-between">
-                <h4 className="font-display text-lg">{p.name}</h4>
-                <Link
-                  to="/shop"
-                  className="text-eyebrow text-muted-foreground hover:text-foreground"
-                >
-                  Shop
-                </Link>
-              </div>
-            </FadeUp>
-          ))}
-        </div>
-      </section>
-
-      {/* 8. TESTIMONIALS */}
-      <section className="border-y border-border bg-sand/25 py-24">
-        <div className="container-editorial">
-          <SectionHeading
-            align="center"
-            eyebrow="Patron Words"
-            title="Homes transformed with quiet warmth"
-          />
-
-          <div className="mt-14 grid gap-8 md:grid-cols-3">
-            {testimonials.map((t, idx) => (
-              <FadeUp
-                key={t.name}
-                delay={idx * 0.1}
-                className="border border-border/80 bg-background p-8 flex flex-col justify-between"
-              >
-                <div className="space-y-4">
-                  <div className="flex gap-1 text-clay">
-                    {"★".repeat(5)}
-                  </div>
-                  <p className="font-display text-xl leading-relaxed text-foreground">
-                    "{t.quote}"
-                  </p>
-                </div>
-                <div className="mt-8 border-t border-border/60 pt-4">
-                  <p className="text-sm font-medium">{t.name}</p>
-                  <p className="text-xs text-muted-foreground">{t.location}</p>
-                </div>
-              </FadeUp>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 9. JOURNAL HIGHLIGHTS */}
-      <section className="container-editorial py-24 md:py-32">
-        <SectionHeading
-          eyebrow="The Journal"
-          title="Notes on living slowly"
-          subtitle="Seasonal styling guides, architectural lighting essays, and care recommendations."
-          action={
-            <Link to="/journal" className="link-underline text-eyebrow inline-flex items-center gap-2">
-              Read all dispatches <ArrowRight className="size-3.5" />
             </Link>
-          }
-        />
+          ))}
+        </div>
+      </section>
 
-        <div className="mt-14 grid gap-8 md:grid-cols-3">
-          {journal.map((entry, idx) => (
-            <FadeUp key={entry.slug} delay={idx * 0.1} className="group flex flex-col">
-              <Link
-                to="/journal/$slug"
-                params={{ slug: entry.slug }}
-                className="bg-secondary aspect-[16/11] overflow-hidden"
-              >
-                <img
-                  src={entry.image}
-                  alt={entry.title}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
-                />
+      {/* Projects */}
+      <section className="container-editorial py-24 md:py-36">
+        <SectionHeading eyebrow="Selected work" title={<>Homes we've <em>lived into.</em></>} action={<Link to="/projects" className="link-underline text-sm">All projects</Link>} />
+        <div className="mt-14 grid gap-x-8 gap-y-16 md:grid-cols-12">
+          <FadeUp className="md:col-span-7"><ProjectCard p={projects[0]!} /></FadeUp>
+          <FadeUp className="md:col-span-5 md:mt-32" delay={0.1}><ProjectCard p={projects[1]!} tall /></FadeUp>
+          <FadeUp className="md:col-span-5"><ProjectCard p={projects[3]!} tall /></FadeUp>
+          <FadeUp className="md:col-span-7 md:mt-24" delay={0.1}><ProjectCard p={projects[2]!} /></FadeUp>
+        </div>
+      </section>
+
+      {/* Before / after */}
+      <section className="bg-ink text-ivory py-24 md:py-32">
+        <div className="container-editorial grid gap-12 md:grid-cols-[1fr_2fr] md:items-center">
+          <div>
+            <p className="text-eyebrow opacity-60">Transformation</p>
+            <h2 className="text-section font-display mt-4">From bare shell to <em>home.</em></h2>
+            <p className="mt-6 max-w-sm leading-relaxed opacity-75">Drag across the image. Same room in Baner, Pune — handed over 43 days after we began.</p>
+          </div>
+          <BeforeAfter />
+        </div>
+      </section>
+
+      {/* Services */}
+      <section className="container-editorial py-24 md:py-36">
+        <SectionHeading eyebrow="What we do" title={<>One studio. <em>Every detail.</em></>} />
+        <div className="mt-14">
+          {services.map((s) => (
+            <FadeUp key={s.n}>
+              <Link to="/services" className="group border-border grid grid-cols-[3rem_1fr] items-baseline gap-4 border-t py-8 md:grid-cols-[5rem_1.2fr_1fr_2rem]">
+                <span className="text-muted-foreground text-sm">{s.n}</span>
+                <span className="font-display text-3xl transition-transform duration-500 group-hover:translate-x-2 md:text-4xl">{s.title}</span>
+                <span className="text-muted-foreground col-start-2 text-sm md:col-start-auto">{s.text}</span>
+                <ArrowUpRight className="hidden size-5 md:block" />
               </Link>
-              <div className="mt-5 flex items-center justify-between text-eyebrow text-muted-foreground">
-                <span>{entry.category}</span>
-                <span>{entry.read}</span>
-              </div>
-              <h3 className="font-display text-2xl mt-2 leading-snug">
-                <Link
-                  to="/journal/$slug"
-                  params={{ slug: entry.slug }}
-                  className="link-underline"
-                >
-                  {entry.title}
-                </Link>
-              </h3>
-              <p className="mt-2 text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                {entry.excerpt}
-              </p>
             </FadeUp>
           ))}
         </div>
       </section>
 
-      {/* 10. COMMUNITY GALLERY */}
-      <section className="border-t border-border py-20 bg-card/25">
+      {/* Process */}
+      <section className="bg-secondary py-24 md:py-32">
         <div className="container-editorial">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-            <div>
-              <p className="text-eyebrow text-muted-foreground">The Maison Community</p>
-              <h3 className="font-display text-2xl md:text-3xl mt-1">@maisontarahome</h3>
-            </div>
-            <p className="text-xs text-muted-foreground">Tag #MaisonTaraLiving to be featured</p>
-          </div>
-
-          <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
-            {socialTiles.map((tile, idx) => (
-              <div key={idx} className="aspect-square bg-secondary overflow-hidden group">
-                <img
-                  src={tile}
-                  alt="Patron living space featuring Maison Tara textiles"
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-              </div>
+          <SectionHeading eyebrow="How it works" title={<>Five steps to <em>moving in.</em></>} />
+          <ol className="mt-14 grid gap-10 md:grid-cols-5">
+            {process.map((p, n) => (
+              <FadeUp as="li" key={p.n} delay={n * 0.08} className="border-foreground/20 border-t pt-6">
+                <p className="font-display text-accent text-5xl">{p.n}</p>
+                <p className="mt-4 font-medium">{p.title}</p>
+                <p className="text-muted-foreground mt-2 text-sm leading-relaxed">{p.text}</p>
+              </FadeUp>
             ))}
-          </div>
+          </ol>
         </div>
       </section>
 
-      {/* 11. THE DISPATCH (NEWSLETTER) */}
-      <section className="bg-ink text-ivory py-24">
-        <div className="container-editorial max-w-2xl text-center">
-          <p className="text-eyebrow text-sand/80 tracking-[0.24em]">The Dispatch</p>
-          <h2 className="font-display text-3xl md:text-4xl mt-3 text-ivory">
-            Receive seasonal notes from the workshop
-          </h2>
-          <p className="mt-4 text-sand/70 text-sm leading-relaxed">
-            Quiet dispatches on slower living, new batch drops, and invitations to private studio gatherings.
-          </p>
+      {/* Estimator */}
+      <section className="container-editorial py-24 md:py-36">
+        <SectionHeading eyebrow="Cost estimator" title={<>Know your budget <em>in a minute.</em></>} subtitle="Three quick choices. An honest range. No sign-up required." />
+        <div className="mt-12"><Estimator /></div>
+      </section>
 
-          {newsletterSent ? (
-            <div className="mt-8 inline-flex items-center gap-2 border border-ivory/30 bg-ivory/10 px-6 py-3 text-sm text-ivory">
-              <Check className="size-4 text-clay" /> Welcome to the Maison. Your first dispatch is on its way.
-            </div>
-          ) : (
-            <form onSubmit={handleNewsletterSubmit} className="mt-8 flex flex-col sm:flex-row gap-3">
-              <input
-                type="email"
-                required
-                value={newsletterEmail}
-                onChange={(e) => setNewsletterEmail(e.target.value)}
-                placeholder="Enter your email address"
-                className="flex-1 bg-ivory/10 border border-ivory/20 px-5 py-4 text-sm text-ivory placeholder:text-sand/50 outline-none focus:border-clay"
-              />
-              <button
-                type="submit"
-                className="bg-ivory text-ink hover:bg-sand px-8 py-4 text-eyebrow transition-colors tracking-[0.16em]"
-              >
-                Join the Maison
-              </button>
-            </form>
-          )}
+      {/* Designers */}
+      <section className="container-editorial pb-24 md:pb-36">
+        <SectionHeading eyebrow="The people" title={<>Meet your <em>designers.</em></>} />
+        <div className="mt-12 grid gap-8 sm:grid-cols-3">
+          {designers.map((d) => (
+            <FadeUp key={d.name}>
+              <ImageReveal src={d.image} alt={`Work by ${d.name}`} className="aspect-[4/5]" />
+              <p className="font-display mt-5 text-2xl">{d.name}</p>
+              <p className="text-muted-foreground text-sm">{d.role} · {d.years} years</p>
+            </FadeUp>
+          ))}
         </div>
       </section>
-    </div>
+
+      {/* Testimonials */}
+      <section className="bg-secondary py-24 md:py-32">
+        <div className="container-editorial grid gap-12 md:grid-cols-3">
+          {testimonials.map((t) => (
+            <FadeUp key={t.name}>
+              <p className="font-display text-2xl leading-snug italic">“{t.quote}”</p>
+              <p className="mt-6 text-sm font-medium">{t.name}</p>
+              <p className="text-muted-foreground text-sm">{t.place}</p>
+            </FadeUp>
+          ))}
+        </div>
+      </section>
+
+      {/* Journal */}
+      <section className="container-editorial py-24 md:py-36">
+        <SectionHeading eyebrow="Journal" title={<>Notes on <em>living well.</em></>} action={<Link to="/journal" className="link-underline text-sm">Read the journal</Link>} />
+        <div className="mt-12 grid gap-10 md:grid-cols-3">
+          {journal.map((j) => (
+            <Link key={j.slug} to="/journal" className="group">
+              <div className="aspect-[4/3] overflow-hidden"><img src={j.image} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105" /></div>
+              <p className="text-eyebrow text-muted-foreground mt-5">{j.tag} · {j.read}</p>
+              <p className="font-display mt-2 text-2xl">{j.title}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="relative overflow-hidden">
+        <img src={img.story} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+        <div className="bg-ink/60 absolute inset-0" />
+        <div className="container-editorial text-ivory relative py-32 text-center md:py-48">
+          <h2 className="text-hero font-display mx-auto max-w-4xl">Let's begin with <em>a conversation.</em></h2>
+          <Link to="/consultation" className="bg-ivory text-ink hover:bg-accent hover:text-ivory mt-12 inline-flex h-14 items-center gap-3 px-8 text-sm tracking-[0.1em] uppercase transition-colors">
+            Book free consultation <ArrowRight className="size-4" />
+          </Link>
+        </div>
+      </section>
+    </>
   );
 }
