@@ -19,6 +19,7 @@ export const navLinks = [
   { label: "Cost estimate", to: "/estimate" as const },
   { label: "Journal", to: "/journal" as const },
   { label: "Studio", to: "/about" as const },
+  { label: "Lie detector", to: "/detector" as const },
 ];
 
 export const heroSlides = [
