@@ -50,7 +50,6 @@ export const analyzeText = createServerFn({ method: "POST" })
 
     const result = streamText({
       model: provider.responses("openai/gpt-6-astra"),
-      abortSignal: signal,
       system: SYSTEM_PROMPT,
       messages: [{ role: "user", content: data.text }],
       providerOptions: {
