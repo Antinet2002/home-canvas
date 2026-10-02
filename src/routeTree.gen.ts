@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as ConsultationRouteImport } from './routes/consultation'
+import { Route as DetectorRouteImport } from './routes/detector'
 import { Route as EstimateRouteImport } from './routes/estimate'
 import { Route as JournalRouteImport } from './routes/journal'
 import { Route as ProjectsRouteImport } from './routes/projects'
@@ -30,6 +31,11 @@ const AboutRoute = AboutRouteImport.update({
 const ConsultationRoute = ConsultationRouteImport.update({
   id: '/consultation',
   path: '/consultation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DetectorRoute = DetectorRouteImport.update({
+  id: '/detector',
+  path: '/detector',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EstimateRoute = EstimateRouteImport.update({
@@ -57,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/consultation': typeof ConsultationRoute
+  '/detector': typeof DetectorRoute
   '/estimate': typeof EstimateRoute
   '/journal': typeof JournalRoute
   '/projects': typeof ProjectsRoute
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/consultation': typeof ConsultationRoute
+  '/detector': typeof DetectorRoute
   '/estimate': typeof EstimateRoute
   '/journal': typeof JournalRoute
   '/projects': typeof ProjectsRoute
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/consultation': typeof ConsultationRoute
+  '/detector': typeof DetectorRoute
   '/estimate': typeof EstimateRoute
   '/journal': typeof JournalRoute
   '/projects': typeof ProjectsRoute
@@ -87,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/consultation'
+    | '/detector'
     | '/estimate'
     | '/journal'
     | '/projects'
@@ -96,6 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/consultation'
+    | '/detector'
     | '/estimate'
     | '/journal'
     | '/projects'
@@ -105,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/consultation'
+    | '/detector'
     | '/estimate'
     | '/journal'
     | '/projects'
@@ -115,6 +127,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ConsultationRoute: typeof ConsultationRoute
+  DetectorRoute: typeof DetectorRoute
   EstimateRoute: typeof EstimateRoute
   JournalRoute: typeof JournalRoute
   ProjectsRoute: typeof ProjectsRoute
@@ -142,6 +155,13 @@ declare module '@tanstack/react-router' {
       path: '/consultation'
       fullPath: '/consultation'
       preLoaderRoute: typeof ConsultationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/detector': {
+      id: '/detector'
+      path: '/detector'
+      fullPath: '/detector'
+      preLoaderRoute: typeof DetectorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/estimate': {
@@ -179,6 +199,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ConsultationRoute: ConsultationRoute,
+  DetectorRoute: DetectorRoute,
   EstimateRoute: EstimateRoute,
   JournalRoute: JournalRoute,
   ProjectsRoute: ProjectsRoute,
