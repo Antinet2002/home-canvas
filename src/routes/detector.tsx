@@ -183,7 +183,7 @@ function DetectorPage() {
                       <li key={i} className="border-border bg-background border p-4">
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="text-sm font-medium">{f.tactic}</span>
-                          <span className={`border px-2 py-0.5 text-[11px] tracking-wide uppercase ${severityStyle[f.severity] ?? severityStyle.low}`}>
+                          <span className={`border px-2 py-0.5 text-[11px] tracking-wide uppercase ${severityStyle[f.severity] ?? severityStyle["low"]}`}>
                             {f.severity}
                           </span>
                         </div>

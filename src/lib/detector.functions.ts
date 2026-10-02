@@ -38,7 +38,7 @@ Include at most 6 flags, ordered by severity. If the text is honest, return an e
 
 export const analyzeText = createServerFn({ method: "POST" })
   .inputValidator((data) => inputSchema.parse(data))
-  .handler(async ({ data, signal }): Promise<DetectorResult> => {
+  .handler(async ({ data }): Promise<DetectorResult> => {
     const apiKey = process.env["LOVABLE_API_KEY"];
     if (!apiKey) throw new Error("AI is not configured on the server.");
 
